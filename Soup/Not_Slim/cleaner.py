@@ -70,8 +70,8 @@ clean_text = ''
 #s = 'eminem_' + s
 #songs = [s]
 #print(songs)
-for fil in songs	
-	if(path.exists('cleanlyrics/' + fill + '.txt')):
+for fil in songs:	
+	if(path.exists('cleanlyrics/' + fil + '.txt')):
 		continue
 	print(fil)
 
@@ -80,7 +80,7 @@ for fil in songs
 		continue
 	
 	with open('lyrics/' + fil + '.txt', 'r', encoding="utf-8") as f:
-		
+		op = open("cleanlyrics/"+fil+'.txt', 'w+', encoding='utf-8')
 		text = f.read() #+=
 		text = text.lower()
 		for nums in re.findall(r'[0-9]+',text):
@@ -107,6 +107,7 @@ for fil in songs
 #print(text)
 #print(sorted(dic.items(), key = lambda x: x[1]))
 	op.write(text)
+	op.close()
 op.close()
 f.close()
 
