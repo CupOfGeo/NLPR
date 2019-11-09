@@ -18,6 +18,11 @@ import matplotlib.pyplot as plt
 from keras.preprocessing.text import Tokenizer
 
 
+
+'''
+gets the cleaned lyrics from the one large text file Em-bars.txt
+makes the sequences and outputs them as outputBars.txt
+'''
 def get_bars():
     inFile = 'EM_bars.txt' # cleaned input file
     file = open(inFile, 'r') # open file
@@ -38,6 +43,10 @@ def get_bars():
     save_doc(bars, outFileName)
     return bars
 
+
+'''
+save file function
+'''
 def save_doc(lines, fileName):
     # save sequences of text to a file
     data = '\n'.join(lines)
@@ -45,6 +54,13 @@ def save_doc(lines, fileName):
     file.write(data)
     file.close()
 
+
+'''
+The Neurla net model 
+2 LSTM layers of 100 nodes each
+Dense layer of 100 nodes with relu activation
+Dense layer softmax activation
+'''
 def make_model(vocab_size, seq_length):
     model = Sequential()
     model.add(Embedding(vocab_size, 30, input_length =seq_length))
@@ -55,17 +71,18 @@ def make_model(vocab_size, seq_length):
     model.add(Dense(100, activation='relu'))
     model.add(Dense(vocab_size, activation= 'softmax'))
     model.compile(loss = 'categorical_crossentropy', optimizer='adam', metrics=['accuracy']) # compile network
-    # model is compiled specifying the categorical cross entropy loss needed to fit the model
+    # TODO model is compiled specifying the categorical cross entropy loss needed to fit the model
+    # Should be using our own custom word similarity loss function 
     model.summary() 
     return model
 
 
-def clean_doc(doc):
-	'''
 
-	:param doc:
-	:return:
-	'''
+'''
+turns lines to tokens
+returns the tokens
+'''
+def clean_doc(doc):
 	# replace '--' with a space ' '
 	doc = doc.replace('--', ' ')
 	# split into tokens by white space
@@ -73,6 +90,11 @@ def clean_doc(doc):
 	tokens = [word.lower() for word in tokens if word.isalpha()]
 	return tokens
 
+
+'''
+If the model is not being trained
+This is where the model outputs the  100 words based on a seedText of 30 words
+'''
 def use_model(seedTextFile):
     seq_length = 30
     model = load_model('model.h5') #loads the keras model
@@ -90,7 +112,12 @@ def use_model(seedTextFile):
 
 
 
-
+'''
+Generates the 100 words 
+predicts a word called target from 30 words 
+target is a number that must be looked up in a dictionary to find the actual word
+adds the target_word to the output to be returned to use_model
+'''
 def generate_sequence(model, tokenizer, seq_length, seed_text, n):
     # generate a sequence of new words of length n based on the training data
     result = list()
@@ -115,6 +142,9 @@ def generate_sequence(model, tokenizer, seq_length, seed_text, n):
     return ' '.join(result)
 
 
+'''
+main method to deside to train the model or use_model
+'''
 def main():
     training_mode = False
     tg  = input("If you would like to train, input 1. If not, input anything else. ")
@@ -157,6 +187,6 @@ def main():
         model.save_weights('bestweights.h5')
         dump(tokenizer, open('tokenizer.pkl', 'wb')) # save the tokenizer
     else:
-        use_model('seedText2.txt')
+        use_model('seedText.txt')
 main()
 
