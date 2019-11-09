@@ -220,7 +220,7 @@ def make_sequences():
 	'''
 
 	tokens = clean_doc(text)
-
+	#change to take lines
 	# organize into sequences of tokens
 	length = 50 + 1
 	sequences = list()
@@ -234,7 +234,7 @@ def make_sequences():
 
 	# save sequences to file
 #	out_filename = FILE_PREFIX + '_sequences.txt'
-	out_filename = 'Slimshady_' + '_sequences.txt'
+	out_filename = 'Slimshady' + '_sequences.txt'
 	save_doc(sequences, out_filename)
 	return sequences
 
@@ -276,7 +276,7 @@ def main():
 
 	dump(tokenizer, open('tokenizer' + '.pkl', 'wb'))
 	callbacks_list = [checkpoint,reduce_lr]
-	model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+	model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy']) #loss function???
 	choice = input("Input (Y) if you want to train. Input anything else if you just want to generate text: ")
 	if choice == "y" or choice == "Y":
 
